@@ -2,7 +2,7 @@
 
 set -x
 
-INITRAMFS="${ANDROID_BUILD_TOP}/initramfs/galaxys4g"
+INITRAMFS_REAL="${ANDROID_BUILD_TOP}/initramfs/galaxys4g"
 INITRAMFS="/tmp/sgs4g_gb_initramfs"
 
 setup ()
@@ -36,9 +36,9 @@ build ()
     echo "Building for $target"
     local target_dir="$BUILD_DIR/$target"
     local module
-    rm -rf ${INITRAMFS}
-    cp -rf ${INITRAMFS_REAL} ${INITRAMFS}
-    find . -name \.git -o -name \.gitignore | xargs rm -rf
+    rm -rf "${INITRAMFS}"
+    cp -rf "${INITRAMFS_REAL}" "${INITRAMFS}"
+    find "${INITRAMFS}" -name '\.git' -o -name '\.gitignore' | xargs rm -rf
     rm -fr "$target_dir"
     mkdir -p "$target_dir"
     mka -C "$KERNEL_DIR" O="$target_dir" ARCH=arm aries_${target}_defconfig CONFIG_INITRAMFS_SOURCE="${INITRAMFS}" HOSTCC="$CCACHE gcc"
