@@ -38,7 +38,7 @@ build ()
     local module
     rm -rf "${INITRAMFS}"
     cp -rf "${INITRAMFS_REAL}" "${INITRAMFS}"
-    find "${INITRAMFS}" -name '\.git' -o -name '\.gitignore' | xargs rm -rf
+    find "${INITRAMFS}" -name '\.git' -o -name '\.gitignore' -o -name 'EMPTY_DIRECTORY' | xargs rm -rf
     rm -fr "$target_dir"
     mkdir -p "$target_dir"
     mka -C "$KERNEL_DIR" O="$target_dir" ARCH=arm aries_${target}_defconfig CONFIG_INITRAMFS_SOURCE="${INITRAMFS}" HOSTCC="$CCACHE gcc"
@@ -50,7 +50,7 @@ build ()
     mka -C "$KERNEL_DIR" O="$target_dir" ARCH=arm HOSTCC="$CCACHE gcc" CONFIG_INITRAMFS_SOURCE="${INITRAMFS}" CROSS_COMPILE="$CCACHE $CROSS_PREFIX" zImage
     cp "$target_dir"/arch/arm/boot/zImage $ANDROID_BUILD_TOP/device/samsung/$target/kernel
 }
-    
+
 setup
 
 if [ "$1" = clean ] ; then
