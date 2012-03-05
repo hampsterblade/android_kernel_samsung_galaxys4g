@@ -41,6 +41,9 @@ enum soc_type {
 	TYPE_S5PC110,
 };
 
+#ifdef CONFIG_S5PC110_VIBRANTPLUS_BOARD
+#include "samsung_galaxys4g.h"
+#else
 struct mtd_partition s3c_partition_info[] = {
 	{
 		.name		= "misc",
@@ -79,6 +82,7 @@ struct mtd_partition s3c_partition_info[] = {
 		.size		= MTDPART_SIZ_FULL,
 	}
 };
+#endif
 
 #define ONENAND_ERASE_STATUS		0x00
 #define ONENAND_MULTI_ERASE_SET		0x01
