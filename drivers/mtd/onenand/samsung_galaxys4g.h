@@ -59,16 +59,16 @@ struct mtd_partition s3c_partition_info[] = {
 		.offset		= (3952*SZ_256K),
 		.size		= (60*SZ_256K),
 	},
-        { /* The reservoir area is used by Samsung's Block Management Layer (BML)
-             to map good blocks from this reservoir to bad blocks in user
-             partitions. A special tool (bml_over_mtd) is needed to write
-             partition images using bad block mapping.
-             Currently, this is required for flashing the "boot" partition,
-             as Samsung's stock bootloader expects BML partitions.*/
-                .name           = "reservoir",
-                .offset         = (4012*SZ_256K),
-                .size           = (84*SZ_256K), //4095
-         },
+	{ /* The reservoir area is used by Samsung's Block Management Layer (BML)
+	     to map good blocks from this reservoir to bad blocks in user
+	     partitions. A special tool (bml_over_mtd) is needed to write
+	     partition images using bad block mapping.
+	     Currently, this is required for flashing the "boot" partition,
+	     as Samsung's stock bootloader expects BML partitions.*/
+		.name		= "reservoir",
+		.offset		= (4012*SZ_256K),
+		.size		= (84*SZ_256K), //4095
+	},
 };
 
 
