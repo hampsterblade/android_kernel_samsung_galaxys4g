@@ -7533,7 +7533,7 @@ static void __init aries_map_io(void)
 	s3c24xx_init_uarts(aries_uartcfgs, ARRAY_SIZE(aries_uartcfgs));
 	s5p_reserve_bootmem(aries_media_devs, ARRAY_SIZE(aries_media_devs));
 #ifdef CONFIG_MTD_ONENAND
-	s5pc110_device_onenand.name = "s5pc110-onenand";
+	s5pc110_device_onenand.name = "s5p-onenand";
 #endif
 }
 
