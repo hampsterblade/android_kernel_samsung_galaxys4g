@@ -14,9 +14,10 @@ startdir="$(pwd)"
 
 # Default Make Arguments
 ARCH=${ARCH:-"arm"}
-DEFCONFIG=${DEFCONFIG:-"aries_galaxys4g_defconfig"}
-SRC=${SRC:-"${ANDROID_BUILD_TOP}/kernel/galaxys4gmtd"}
-BLD=${BLD:-"${ANDROID_PRODUCT_OUT}/kernel/galaxys4gmtd"}
+DEVICE=${DEVICE:-"galaxys4gmtd"}
+DEFCONFIG=${DEFCONFIG:-"cyanogen_${DEVICE}_defconfig"}
+SRC=${SRC:-"${ANDROID_BUILD_TOP}/kernel/${DEVICE}"}
+BLD=${BLD:-"${ANDROID_PRODUCT_OUT}/kernel/${DEVICE}"}
 JOBS=${JOBS:-"$(grep ^process /proc/cpuinfo | wc -l)"}
 CROSSCC=${CROSSCC:-"${ANDROID_TOOLCHAIN}/arm-eabi-"}
 HOSTCC=${HOSTCC:-"$(which gcc)"}
@@ -68,7 +69,10 @@ build()
     make ${DEFAULT_ARGS} || error "Build Failed!"
     if [ -f ${BLD}/arch/${ARCH}/boot/zImage ]
     then
-        cp ${BLD}/arch/${ARCH}/boot/zImage 
+        cp ${BLD}/arch/${ARCH}/boot/zImage \
+            ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/kernel
+    else
+        error "Could not find zImage"
     fi
     finalize
 }
