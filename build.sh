@@ -17,7 +17,7 @@ ARCH=${ARCH:-"arm"}
 DEVICE=${DEVICE:-"galaxys4gmtd"}
 DEFCONFIG=${DEFCONFIG:-"cyanogen_${DEVICE}_defconfig"}
 SRC=${SRC:-"${ANDROID_BUILD_TOP}/kernel/${DEVICE}"}
-BLD=${BLD:-"${ANDROID_PRODUCT_OUT}/kernel/${DEVICE}"}
+BLD=${BLD:-"${ANDROID_PRODUCT_OUT}/kernel-bld/${DEVICE}"}
 JOBS=${JOBS:-"$(grep ^process /proc/cpuinfo | wc -l)"}
 CROSSCC=${CROSSCC:-"${ANDROID_TOOLCHAIN}/arm-eabi-"}
 HOSTCC=${HOSTCC:-"$(which gcc)"}
@@ -30,7 +30,7 @@ DEFAULT_ARGS=${DEFAULT_ARGS:-"-C ${SRC} O=${BLD} -j${JOBS} ARCH=${ARCH} \
 # MISC Options
 
 # Utility Functions
-error_msg()
+error()
 {
     abort_msg "============== Error!!! ==============\n${@}"
     exit 1
@@ -69,11 +69,23 @@ build()
     make ${DEFAULT_ARGS} || error "Build Failed!"
     if [ -f ${BLD}/arch/${ARCH}/boot/zImage ]
     then
-        cp ${BLD}/arch/${ARCH}/boot/zImage \
+        rm -f ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/kernel
+        cp -f ${BLD}/arch/${ARCH}/boot/zImage \
             ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/kernel
     else
         error "Could not find zImage"
     fi
+    modules=$(find ${BLD} -name '*.ko' -type f)
+    if [ ! x"${modules}" = x"" ]
+    then
+        rm -rf ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/initramfs/lib/modules/*.ko
+        cp -f ${modules} ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/initramfs/lib/modules/
+        rm -rf ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules/*
+        mkdir -p ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules
+        cp -f ${modules} ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules/
+    fi
+    rm -rf ${BLD}/usr/{built-in.o,initramfs_data.{o,cpio*}}
+    make ${DEFAULT_ARGS} || error "Build (repack) Failed!"
     finalize
 }
 
