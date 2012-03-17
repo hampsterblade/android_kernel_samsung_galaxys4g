@@ -17,13 +17,12 @@ ARCH=${ARCH:-"arm"}
 DEVICE=${DEVICE:-"galaxys4gmtd"}
 DEFCONFIG=${DEFCONFIG:-"cyanogen_${DEVICE}_defconfig"}
 SRC=${SRC:-"${ANDROID_BUILD_TOP}/kernel/${DEVICE}"}
-BLD=${BLD:-"${ANDROID_PRODUCT_OUT}/kernel-bld/${DEVICE}"}
 JOBS=${JOBS:-"$(grep ^process /proc/cpuinfo | wc -l)"}
 CROSSCC=${CROSSCC:-"${ANDROID_TOOLCHAIN}/arm-eabi-"}
 HOSTCC=${HOSTCC:-"$(which gcc)"}
 HOSTCXX=${HOSTCXX:-"$(which g++)"}
 EXTRA_CONFIG=${EXTRA_CONFIG:-""}
-DEFAULT_ARGS=${DEFAULT_ARGS:-"-C ${SRC} O=${BLD} -j${JOBS} ARCH=${ARCH} \
+DEFAULT_ARGS=${DEFAULT_ARGS:-"-j${JOBS} ARCH=${ARCH} \
     CROSS_COMPILE=${CROSSCC} HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} \
     ${EXTRA_CONFIG}"}
 
@@ -53,9 +52,8 @@ prep()
     cd ${SRC}
     make distclean || error "Could not make distclean in ${SRC}!"
 
-    if [ ! -d ${BLD} -a ! x"${command}" = x"distclean" ]
+    if [ ! x"${command}" = x"distclean" ]
     then
-        mkdir -p ${BLD} || error "Could not make the ${BLD} directory!"
         make ${DEFAULT_ARGS} ${DEFCONFIG} || \
             error "Could not set default config!"
     fi
@@ -67,25 +65,23 @@ build()
     printf "============== Build ===================\n"
     cd ${SRC}
     make ${DEFAULT_ARGS} || error "Build Failed!"
-    if [ -f ${BLD}/arch/${ARCH}/boot/zImage ]
+    if [ -f arch/${ARCH}/boot/zImage ]
     then
         rm -f ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/kernel
-        cp -f ${BLD}/arch/${ARCH}/boot/zImage \
+        cp -f arch/${ARCH}/boot/zImage \
             ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/kernel
     else
         error "Could not find zImage"
     fi
-    modules=$(find ${BLD} -name '*.ko' -type f)
+    modules=$(find ${SRC} -name '*.ko' -type f)
     if [ ! x"${modules}" = x"" ]
     then
-        rm -rf ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/initramfs/lib/modules/*.ko
-        cp -f ${modules} ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/initramfs/lib/modules/
+        #rm -rf ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/modules/*.ko
+        cp -f ${modules} ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/modules/
         rm -rf ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules/*
         mkdir -p ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules
         cp -f ${modules} ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules/
     fi
-    rm -rf ${BLD}/usr/{built-in.o,initramfs_data.{o,cpio*}}
-    make ${DEFAULT_ARGS} || error "Build (repack) Failed!"
     finalize
 }
 
@@ -95,10 +91,10 @@ config()
     printf "============== Config ==================\n"
     cd ${SRC}
     make ${DEFAULT_ARGS} menuconfig || error "Menuconfig failed!"
-    if [ -r ${BLD}/.config ]
+    if [ -r .config ]
     then
-        cp ${BLD}/.config ${SRC}/arch/${ARCH}/configs/${DEFCONFIG} || \
-            error "Could not copy ${BLD}/.config to ${SRC}/arch/${ARCH}/configs" \
+        cp .config ${SRC}/arch/${ARCH}/configs/${DEFCONFIG} || \
+            error "Could not copy .config to arch/${ARCH}/configs" \
             "/${DEFCONFIG}"
     fi
     finalize
@@ -108,8 +104,9 @@ distclean()
 {
     prep
     printf "============== DistClean ===============\n"
-    rm -rf ${BLD} || error "Unable to delete directory: ${BLD}"
-    printf "Successfully removed: ${BLD}\n"
+    cd ${SRC}
+    make ${DEFAULT_ARGS} distclean || error "distclean failed!"
+    printf "Distclean was successful!\n"
     finalize
 }
 
@@ -137,8 +134,6 @@ usage()
     printf "\t\t(Default: aries_galaxys4g_defconfig)\n"
     printf "SRC\t\tSets the kernel source directory.\n"
     printf "\t\t(Default: ${ANDROID_BUILD_TOP}/kernel/galaxys4gmtd)\n"
-    printf "BLD\t\tSets the build output directory.\n"
-    printf "\t\t(Default: ${ANDROID_PRODUCT_OUT}/kernel/galaxys4gmtd)\n"
     printf "JOBS\t\tSets the number of jobs to build with.\n"
     printf "\t\t(Default: $(grep ^process /proc/cpuinfo | wc -l))\n"
     printf "CROSSCC\t\tCross-Compiler to use.\n"
@@ -150,7 +145,7 @@ usage()
     printf "EXTRA_CONFIG\tCan be used to add other arguments\n"
     printf "to the kernel make command line. This is not set by default.\n"
     printf "DEFAULT_ARGS\tDefault arguments provided by the above:\n"
-    printf "\t\t-C ${SRC} O=${BLD} -j${JOBS} ARCH=${ARCH} \
+    printf "\t\t-j${JOBS} ARCH=${ARCH} \
     CROSS_COMPILE=${CROSSCC} HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} \
     ${EXTRA_CONFIG}\n\n"
     abort
