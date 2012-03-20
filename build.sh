@@ -67,20 +67,21 @@ build()
     make ${DEFAULT_ARGS} || error "Build Failed!"
     if [ -f arch/${ARCH}/boot/zImage ]
     then
+        printf "Copying zImage to: device/samsung/${DEVICE}/kernel\n"
         rm -f ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/kernel
         cp -f arch/${ARCH}/boot/zImage \
             ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/kernel
     else
-        error "Could not find zImage"
+        error "Could not find zImage!"
     fi
     modules=$(find ${SRC} -name '*.ko' -type f)
     if [ ! x"${modules}" = x"" ]
     then
-        #rm -rf ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/modules/*.ko
+        printf "Copying: kernel modules to device/samsung/${DEVICE}/modules/\n"
+        rm -rf ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/modules/*.ko
         cp -f ${modules} ${ANDROID_BUILD_TOP}/device/samsung/${DEVICE}/modules/
-        rm -rf ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules/*
-        mkdir -p ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules
-        cp -f ${modules} ${ANDROID_PRODUCT_OUT}/recovery/root/lib/modules/
+    else
+        error "Couldn't find any kernel modules to copy!"
     fi
     finalize
 }
