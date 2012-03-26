@@ -60,7 +60,7 @@ struct mtd_partition s3c_partition_info[] = {
 		.size		= (160*SZ_256K), //3951
 	},
 	{
-		.name		= "modem",
+		.name		= "radio",
 		.offset		= (3952*SZ_256K),
 		.size		= (60*SZ_256K), //4011
 	},
