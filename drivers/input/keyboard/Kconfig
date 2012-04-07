@@ -466,7 +466,7 @@ config KEYPAD_S3C
 
 config KEYPAD_CYPRESS_TOUCH_BLN
 	bool "Cypress touch keypad: use backlight notification"
-	depends on KEYPAD_CYPRESS_TOUCH
+	depends on KEYPAD_CYPRESS_TOUCH || KEYPAD_CYPRESS_TOUCH_SAMSUNG
 	default y
 	help
 	  Say Y here to enable the backlight notification
