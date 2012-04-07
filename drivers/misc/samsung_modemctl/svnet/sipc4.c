@@ -18,10 +18,10 @@
  * 02110-1301 USA
  */
 
-#define DEBUG
+//#define DEBUG
 
 #if defined(DEBUG)
-#  define NOISY_DEBUG
+//#  define NOISY_DEBUG
 #endif
 
 #include "pdp.h"

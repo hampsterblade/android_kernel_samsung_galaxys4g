@@ -18,7 +18,7 @@
  * 02110-1301 USA
  */
 
-#define DEBUG
+//#define DEBUG
 
 #include <linux/netdevice.h>
 #include <linux/skbuff.h>
