@@ -50,7 +50,11 @@ prep()
 {
     printf "============== Prep ====================\n"
     cd ${SRC}
-    make distclean || error "Could not make distclean in ${SRC}!"
+
+    if [ ! x"${command}" = x"build" ]
+    then
+        make distclean || error "Could not make distclean in ${SRC}!"
+    fi
 
     if [ ! x"${command}" = x"distclean" ]
     then
