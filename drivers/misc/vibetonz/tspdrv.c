@@ -97,7 +97,7 @@ static int set_vibetonz(int timeout)
 {
 	if(!timeout) {
 		pwm_disable(Immvib_pwm);
-		printk("[VIBETONZ] DISABLE\n");
+		//printk("[VIBETONZ] DISABLE\n");
 		gpio_set_value(GPIO_VIBTONE_EN1, GPIO_LEVEL_LOW);
 		gpio_direction_input(GPIO_VIBTONE_EN1);
 		s3c_gpio_setpull(GPIO_VIBTONE_EN1,S3C_GPIO_PULL_DOWN);
@@ -108,7 +108,7 @@ static int set_vibetonz(int timeout)
 		pwm_config(Immvib_pwm, VIBRATOR_DUTY, VIBRATOR_PERIOD);
 		pwm_enable(Immvib_pwm);
 		
-		printk("[VIBETONZ] ENABLE\n");
+		//printk("[VIBETONZ] ENABLE\n");
 		gpio_direction_output(GPIO_VIBTONE_EN1, GPIO_LEVEL_LOW);
 		mdelay(1);
 		gpio_set_value(GPIO_VIBTONE_EN1, GPIO_LEVEL_HIGH);
