@@ -69,6 +69,7 @@ build()
     printf "============== Build ===================\n"
     cd ${SRC}
     make ${DEFAULT_ARGS} || error "Build Failed!"
+    make ${DEFAULT_ARGS} modules || error "Build Modules Failed!"
     if [ -f arch/${ARCH}/boot/zImage ]
     then
         printf "Copying zImage to: device/samsung/${DEVICE}/kernel\n"
