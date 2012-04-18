@@ -185,7 +185,7 @@ config S5PC110_HAWK_BOARD
 		
 config S5PC110_VIBRANTPLUS_BOARD
 	bool "S5PC110_VIBRANTPLUS"
-        select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
+        #select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
         select S3C_DEV_HSMMC2
 	help
 		select NA USA Board		

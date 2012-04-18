@@ -7180,9 +7180,13 @@ static int wlan_carddetect_en(int onoff)
 	}
 	udelay(5);
 #if !defined(CONFIG_S5PC110_DEMPSEY_BOARD)
+#if defined(CONFIG_S3C_DEV_HSMMC1)
 	sdhci_s3c_force_presence_change(&s3c_device_hsmmc1);
+#endif
 #else
+#if defined(CONFIG_S3C_DEV_HSMMC3)
 	sdhci_s3c_force_presence_change(&s3c_device_hsmmc3);
+#endif
 #endif
 	return 0;
 }
