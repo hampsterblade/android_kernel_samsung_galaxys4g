@@ -99,6 +99,16 @@ static struct sleep_save core_save[] = {
 	SAVE_ITEM(S3C2410_TCNTO(0)),
 };
 
+static struct sleep_save sromc_save[] = {
+	SAVE_ITEM(S5P_SROM_BW),
+	SAVE_ITEM(S5P_SROM_BC0),
+	SAVE_ITEM(S5P_SROM_BC1),
+	SAVE_ITEM(S5P_SROM_BC2),
+	SAVE_ITEM(S5P_SROM_BC3),
+	SAVE_ITEM(S5P_SROM_BC4),
+	SAVE_ITEM(S5P_SROM_BC5),
+};
+
 void s5pv210_cpu_suspend(void)
 {
 	unsigned long tmp;
@@ -142,6 +152,7 @@ static void s5pv210_pm_prepare(void)
 	__raw_writel(0xffffffff, (VA_VIC2 + VIC_INT_ENABLE_CLEAR));
 	__raw_writel(0xffffffff, (VA_VIC3 + VIC_INT_ENABLE_CLEAR));
 
+	s3c_pm_do_save(sromc_save, ARRAY_SIZE(sromc_save));
 	s3c_pm_do_save(core_save, ARRAY_SIZE(core_save));
 }
 
@@ -170,7 +181,7 @@ static void s5pv210_pm_resume(void)
 	}
 
 	s3c_pm_do_restore_core(core_save, ARRAY_SIZE(core_save));
-
+	s3c_pm_do_restore_core(sromc_save, ARRAY_SIZE(sromc_save));
 }
 
 static __init int s5pv210_pm_drvinit(void)
