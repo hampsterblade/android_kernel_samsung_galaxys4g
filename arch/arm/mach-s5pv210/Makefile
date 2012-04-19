@@ -38,7 +38,7 @@ else
 obj-$(CONFIG_MACH_ARIES)	+= mach-aries.o aries-rfkill.o
 endif
 obj-$(CONFIG_MACH_ARIES)	+= aries-vibrator.o
-#obj-$(CONFIG_MACH_ARIES)	+= aries-btlpm.o
+obj-$(CONFIG_MACH_ARIES)	+= aries-btlpm.o
 obj-$(CONFIG_MACH_ARIES)	+= aries-watchdog.o
 obj-$(CONFIG_MACH_ARIES)	+= aries-panel.o
 obj-$(CONFIG_MACH_ARIES)        += sec_switch.o
