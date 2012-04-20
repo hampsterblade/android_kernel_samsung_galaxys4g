@@ -48,9 +48,7 @@ static LIST_HEAD(inactive_locks);
 static struct list_head active_wake_locks[WAKE_LOCK_TYPE_COUNT];
 static int current_event_num;
 struct workqueue_struct *suspend_work_queue;
-struct workqueue_struct *sync_work_queue;
 struct wake_lock main_wake_lock;
-struct wake_lock sync_wake_lock;
 suspend_state_t requested_suspend_state = PM_SUSPEND_MEM;
 static struct wake_lock unknown_wakeup;
 static struct wake_lock suspend_backoff_lock;
@@ -569,6 +567,7 @@ int wake_lock_active(struct wake_lock *lock)
 }
 EXPORT_SYMBOL(wake_lock_active);
 
+#ifdef CONFIG_WAKELOCK_STAT
 static int wakelock_stats_open(struct inode *inode, struct file *file)
 {
 	return single_open(file, wakelock_stats_show, NULL);
@@ -581,6 +580,7 @@ static const struct file_operations wakelock_stats_fops = {
 	.llseek = seq_lseek,
 	.release = single_release,
 };
+#endif
 
 static int __init wakelocks_init(void)
 {
@@ -617,21 +617,12 @@ static int __init wakelocks_init(void)
 		goto err_suspend_work_queue;
 	}
 
-	sync_work_queue = create_singlethread_workqueue("sync_system_work");
-	if (sync_work_queue == NULL) {
-		pr_err("%s: failed to create sync_work_queue\n", __func__);
-		ret = -ENOMEM;
-		goto err_sync_work_queue;
-	}
-
 #ifdef CONFIG_WAKELOCK_STAT
 	proc_create("wakelocks", S_IRUGO, NULL, &wakelock_stats_fops);
 #endif
 
 	return 0;
 
-err_sync_work_queue:
-	destroy_workqueue(suspend_work_queue);
 err_suspend_work_queue:
 	platform_driver_unregister(&power_driver);
 err_platform_driver_register:
@@ -651,7 +642,6 @@ static void  __exit wakelocks_exit(void)
 #ifdef CONFIG_WAKELOCK_STAT
 	remove_proc_entry("wakelocks", NULL);
 #endif
-	destroy_workqueue(sync_work_queue);
 	destroy_workqueue(suspend_work_queue);
 	platform_driver_unregister(&power_driver);
 	platform_device_unregister(&power_device);
