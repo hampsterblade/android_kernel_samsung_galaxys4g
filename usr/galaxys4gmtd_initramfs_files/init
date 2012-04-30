@@ -8,6 +8,7 @@ exec >>boot.txt 2>&1
 busybox rm init
 busybox mount -t proc proc /proc
 busybox mount -t sysfs sysfs /sys
+busybox mount -t tmpfs tmpfs /tmp
 
 bml_over_mtd dump boot 72 reservoir 4012 /stage1/boot.bin
 
