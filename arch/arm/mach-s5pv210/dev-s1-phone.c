@@ -76,11 +76,7 @@ static struct modemctl_platform_data mdmctl_data = {
 	.gpio_int_resout = GPIO_INT_RESOUT,
 	.gpio_int_cp_pwr_rst = GPIO_CP_PWR_RST, 
 #endif
-#if defined(CONFIG_S5PC110_HAWK_BOARD)
-	.gpio_sim_ndetect = GPIO_SIM_nDETECT,		/* Galaxy S does not include SIM detect pin */
-#else
 	.gpio_sim_ndetect = 0,		/* Galaxy S does not include SIM detect pin */
-#endif
 	.cfg_gpio = modemctl_cfg_gpio,
 	};
 
@@ -90,25 +86,6 @@ static struct resource mdmctl_res[] = {
 		.end = IRQ_EINT15,
 		.flags = IORESOURCE_IRQ,
 		},
-#if defined(CONFIG_S5PC110_HAWK_BOARD)
-	[1] = {
-		.start =IRQ_EINT14,
-		.end =IRQ_EINT14,
-		.flags = IORESOURCE_IRQ,
-		},		
-	#if defined (CONFIG_CP_CHIPSET_STE) 
-		[2] = {
-			.start = IRQ_EINT12,
-			.end = IRQ_EINT12,
-			.flags = IORESOURCE_IRQ,
-			},
-		[3] = {
-		.start = IRQ_EINT9,
-		.end = IRQ_EINT9,
-		.flags = IORESOURCE_IRQ,
-			},	
-	#endif
-#elif defined(CONFIG_S5PC110_VIBRANTPLUS_BOARD)	|| defined(CONFIG_S5PC110_SIDEKICK_BOARD) || defined(CONFIG_S5PC110_DEMPSEY_BOARD)
 	#if defined (CONFIG_CP_CHIPSET_STE)
 		[1] = {
 			.start = IRQ_EINT12,
@@ -121,13 +98,6 @@ static struct resource mdmctl_res[] = {
 			.flags = IORESOURCE_IRQ,
 			},
 	#endif
-#elif !(defined(CONFIG_S5PC110_KEPLER_BOARD) || defined(CONFIG_S5PC110_T959_BOARD) || defined(CONFIG_S5PC110_FLEMING_BOARD)   ) // irq_eint(27) is used for fuel_int 
-	[1] = {
-		.start = IRQ_EINT(27),
-		.end = IRQ_EINT(27),
-		.flags = IORESOURCE_IRQ,
-		},
-#endif
 	};
 
 static struct platform_device modemctl = {

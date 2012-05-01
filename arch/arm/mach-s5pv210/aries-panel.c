@@ -15,71 +15,11 @@
  */
 #include <linux/kernel.h>
 #include <linux/types.h>
-#if defined (CONFIG_FB_S3C_uPD161224) /* 20110207 nat */
-#include <linux/tmd.h>
-#else
 #include <linux/tl2796.h>
 #include <linux/nt35580.h>
-#endif
 
 #define SLEEPMSEC		0x1000
 #define ENDDEF			0x2000
-
-#if defined (CONFIG_FB_S3C_uPD161224) /* 20110207 nat */
-
-/* TMD 3.5 inch WVGA REV 0.4 10.11.11 Excel version */
-static const u16 SEQ_PANEL_LCD_SET_MANUFACTURE_COMMAND_CODE[] = { 
-	0xB2, 0x100,
-	0x53, 0x100,
-	0x54, 0x100,
-	0x57, 0x100,
-	0x62, 0x105,  
-	0x67, 0x170, 
-	0x68, 0x123, 
-	0x6A, 0x103, 
-	0x6B, 0x101,
-	0x6C, 0x10F, 
-	0x6D, 0x10F, 
-	0x6F, 0x10B, 
-	0x77, 0x153,
-	0x78, 0x100,
-	0x79, 0x148,
-	0x7A, 0x100,
-	0x7B, 0x1FF, //
-	0x7C, 0x110, 
-	0x7D, 0x12E, 
-	0x7E, 0x10E, 
-	0x7F, 0x1F0, 
-	0x80, 0x100,
-	0x81, 0x1FF, //
-	0x82, 0x1F1, 
-	0x83, 0x10B, 
-	0x84, 0x1E1, 
-	0x85, 0x1F0, 
-	0x86, 0x100,
-	0x87, 0x1FF, //
-	0x88, 0x1B5, 
-	0x89, 0x1CD, 
-	0x8A, 0x185, 
-	0x8B, 0x110, 
-	0x9F, 0x103,
-	0xA0, 0x120,
-	0xB3, 0x100,
-	0xB4, 0x152,
-	0xC7, 0x100,
-	0xC8, 0x101,
-	0xC9, 0x103,
-	0xCA, 0x120,
-	0xB2, 0x103,
-
-	ENDDEF, 0x0000	
-};
-
-struct s5p_panel_data aries_panel_data = {
-	.standby_on = SEQ_PANEL_LCD_SET_MANUFACTURE_COMMAND_CODE,
-};
-
-#else  /* defined (CONFIG_S5PC110_HAWK_BOARD) */
 
 static const u16 s6e63m0_SEQ_DISPLAY_ON[] = {
 	0x029,
@@ -1036,7 +976,6 @@ static const u16 s6e63m0_22gamma_30cd[] = {
 }; 
 
 
-#if !defined(CONFIG_ARIES_NTT)
 static const u16 *p22Gamma_set[] = {
 	s6e63m0_22gamma_30cd,
 	s6e63m0_22gamma_40cd,                         
@@ -1064,35 +1003,6 @@ static const u16 *p22Gamma_set[] = {
 	s6e63m0_22gamma_290cd,                        
 	s6e63m0_22gamma_300cd,         
 };                                             
-#else                                
-static const u16 *p22Gamma_set[] = {        
-	s6e63m0_22gamma_30cd,
-	s6e63m0_22gamma_40cd,  
-	s6e63m0_22gamma_50cd,
-	s6e63m0_22gamma_60cd,
-	s6e63m0_22gamma_70cd,	
-	s6e63m0_22gamma_80cd,
-	s6e63m0_22gamma_90cd,
-	s6e63m0_22gamma_100cd,
-	s6e63m0_22gamma_110cd,	
-	s6e63m0_22gamma_120cd,	
-	s6e63m0_22gamma_130cd,
-	s6e63m0_22gamma_140cd,
-	s6e63m0_22gamma_150cd,
-	s6e63m0_22gamma_160cd,	
-	s6e63m0_22gamma_170cd,	
-	s6e63m0_22gamma_180cd,
-	s6e63m0_22gamma_190cd,
-	s6e63m0_22gamma_200cd,
-	s6e63m0_22gamma_210cd,	
-	s6e63m0_22gamma_220cd,	
-	s6e63m0_22gamma_230cd,
-	s6e63m0_22gamma_240cd,
-	s6e63m0_22gamma_260cd,
-	s6e63m0_22gamma_280cd,
-	s6e63m0_22gamma_300cd,     
-};        
-#endif
                                                 
 static const u16 s6e63m0_19gamma_300cd[] = {                                 
 	0x0FA,                                        	                                              
@@ -1906,7 +1816,6 @@ static const u16 s6e63m0_19gamma_30cd[] = {
 	ENDDEF, 0x0000                               
 }; 
 
-#if !defined(CONFIG_ARIES_NTT)  
 static const u16 *p19Gamma_set[] = {        
 	s6e63m0_19gamma_30cd,                                   
 	s6e63m0_19gamma_40cd,                         
@@ -1934,35 +1843,6 @@ static const u16 *p19Gamma_set[] = {
 	s6e63m0_19gamma_290cd,                        
 	s6e63m0_19gamma_300cd,                  
 }; 
-#else
-static const u16 *p19Gamma_set[] = {        
-	s6e63m0_19gamma_30cd,             
-	s6e63m0_19gamma_40cd,  
-	s6e63m0_19gamma_50cd,
-	s6e63m0_19gamma_60cd,
-	s6e63m0_19gamma_70cd,	
-	s6e63m0_19gamma_80cd,
-	s6e63m0_19gamma_90cd,
-	s6e63m0_19gamma_100cd,
-	s6e63m0_19gamma_110cd,	
-	s6e63m0_19gamma_120cd,	
-	s6e63m0_19gamma_130cd,
-	s6e63m0_19gamma_140cd,
-	s6e63m0_19gamma_150cd,
-	s6e63m0_19gamma_160cd,	
-	s6e63m0_19gamma_170cd,	
-	s6e63m0_19gamma_180cd,
-	s6e63m0_19gamma_190cd,
-	s6e63m0_19gamma_200cd,
-	s6e63m0_19gamma_210cd,	
-	s6e63m0_19gamma_220cd,	
-	s6e63m0_19gamma_230cd,
-	s6e63m0_19gamma_240cd,
-	s6e63m0_19gamma_260cd,
-	s6e63m0_19gamma_280cd,
-	s6e63m0_19gamma_300cd,
-}; 
-#endif
 
 static const u16 gamma_updates[] = { 
 	0x0FA,	
@@ -2517,6 +2397,3 @@ struct s5p_tft_panel_data aries_tft_panel_data = {
 	.display_off = nt35580_SEQ_DISPLAY_OFF,
 	.brightness_set = brightness_setting_table,
 };
-
-#endif  /* defined (CONFIG_S5PC110_HAWK_BOARD) */
-

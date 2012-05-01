@@ -131,6 +131,7 @@ config MACH_HERRING
 	select ARCH_HAS_CPUFREQ
 	select S3C_DEV_HSMMC
 	select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
+	select S3C_DEV_HSMMC2
 	select S3C_DEV_HSMMC3 if !S5PV210_SD_CH2_8BIT
 	select S5PV210_SETUP_SDHCI
 	select S5PV210_POWER_DOMAIN
@@ -156,173 +157,19 @@ config MACH_ARIES
 	help
 	  Machine support for Aries
 
-choice
-	prompt "Select NA USA BOARD TYPE "
-
-config S5PC110_KEPLER_BOARD
-	bool "S5PC110_KEPLER"
-	select S3C_DEV_HSMMC
-        select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
-        select S3C_DEV_HSMMC2
-	help
-		select NA USA Board 
-
-config S5PC110_T959_BOARD
-	bool "S5PC110_T959"
-	select S3C_DEV_HSMMC
-        select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
-        select S3C_DEV_HSMMC2
-	help
-		select NA USA Board 
-
-
-config S5PC110_HAWK_BOARD
-	bool "S5PC110_HAWK"
-	select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
-        select S3C_DEV_HSMMC2
-	help
-		select NA USA Board 
-		
 config S5PC110_VIBRANTPLUS_BOARD
 	bool "S5PC110_VIBRANTPLUS"
+	depends on MACH_ARIES
         select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
         select S3C_DEV_HSMMC2
 	help
 		select NA USA Board		
 		
-config S5PC110_FLEMING_BOARD
-	bool "S5PC110_fleming"
-	select S3C_DEV_HSMMC
-	select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
-        select S3C_DEV_HSMMC2
-	help
-		select NA USA Board 
-
-
-config S5PC110_DEMPSEY_BOARD
-	bool "S5PC110_DEMPSEY"
-        select S3C_DEV_HSMMC
-        select S3C_DEV_HSMMC1 if !S5PV210_SD_CH0_8BIT
-        select S3C_DEV_HSMMC2
-        select S3C_DEV_HSMMC3
-	help
-		select NA USA Board 
-
-		
-endchoice 
-
-choice 
-        prompt "Select KEPLER BOARD VERSION "
-config KEPLER_VER_B2
-        bool "add KEPLER VERSION B0"
-        depends on S5PC110_KEPLER_BOARD
-        help
-         add kepler ver B2 option 
-         
-endchoice
-
-choice 
-	prompt "Select T959 BOARD VERSION"
-	
-config T959_VER_B5
-        bool "add T959 VERSION"
-         depends on S5PC110_T959_BOARD
-        help
-         add T959 ver B5 option 
-         
-endchoice 
-
-choice 
-	prompt "Select HAWK BOARD VERSION"
-         
-config HAWK_VER_B0
-        bool "add HAWK VERSION"
-         depends on S5PC110_HAWK_BOARD
-        help
-         add HAWK ver B0 option 
-endchoice 
-
-config HAWK_VER_B0_HW_FIX
-        bool "add HAWK VERSION"
-         depends on S5PC110_HAWK_BOARD
-        help
-         add HAWK ver B0 option and HW FIX
-
-config HAWK_VER_B1_REAL_ADDED_FEATURE
-        bool "add HAWK VERSION"
-         depends on S5PC110_HAWK_BOARD
-        help
-         add HAWK ver Real B1 option 
-
-choice 
-	prompt "Select VIBRANTPLUS BOARD VERSION"
-         
-config VIBRANTPLUS_VER_B0
-        bool "add VIBRANTPLUS VERSION"
-         depends on S5PC110_VIBRANTPLUS_BOARD
-        help
-         add VIBRANTPLUS ver B0 option 
-endchoice 
-
-choice 
-	prompt "Select FLEMING BOARD VERSION"
-	
-config FLEMING_VER_B0
-        bool "add fleming VERSION"
-         depends on S5PC110_FLEMING_BOARD
-        help
-         add fleming ver B0 option 
-         
-endchoice 
-
-
-config S5PC110_DEMPSEYR_BOARD
-	bool "S5PC110_DEMPSEY Rogers"
-	depends on S5PC110_DEMPSEY_BOARD
-	default n
-	help
-	 add dempsey rogers option
-		
-
-choice 
-	prompt "Select DEMPSEY BOARD VERSION"
-         
-config DEMPSEY_VER_B0
-        bool "add DEMPSEY VERSION"
-         depends on S5PC110_DEMPSEY_BOARD
-        help
-         add DEMPSEY ver B0 option 
-endchoice 
-
 config GPS_CHIPSET_STE_GNS7560
         bool "add GPS GNS7560"
         default n
         help
          add  GPS config
-
-config GPS_CHIPSET_STE_CG2900
-        bool "add GPS GNS2900"
-        default n
-        help
-         add  GPS config
-
-config ARIES_EUR
-	bool "select S1 Europe"
-	depends on MACH_ARIES
-	help
-	Select S1 Europe
-
-config ARIES_NTT
-	bool "select S1 NTT"
-	depends on MACH_ARIES
-	help
-	Select S1 NTT
-
-config ARIES_LATONA
-	bool "select S1 LATONA"
-	depends on MACH_ARIES
-	help
-	Select S1 LATONA
 
 config S5PV210_SETUP_FB
 	bool

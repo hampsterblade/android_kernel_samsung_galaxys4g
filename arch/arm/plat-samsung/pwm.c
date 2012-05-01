@@ -26,13 +26,6 @@
 #include <plat/devs.h>
 #include <plat/regs-timer.h>
 
-#if defined (CONFIG_S5PC110_HAWK_BOARD)
-#include <mach/gpio.h>
-#include <mach/gpio-aries.h>
-#include <plat/gpio-cfg.h>
-#include <linux/delay.h>
-#endif
-
 struct pwm_device {
 	struct list_head	 list;
 	struct platform_device	*pdev;
@@ -151,18 +144,6 @@ int pwm_enable(struct pwm_device *pwm)
 
 	spin_lock_irqsave(&pwm_spin_lock, flags);
 
-#if defined (CONFIG_S5PC110_HAWK_BOARD) /* nat */
-	if (pwm->pwm_id==0) {
-		s3c_gpio_cfgpin(GPIO_LCD_BL_PWM,  (0x2 << 0));
-
-		/* PWM timer #0 output inverter bit in TCON for must be set.
-			After sleep out, the bit has been erased even though resume function did set.*/
-		tcon = __raw_readl(S3C2410_TCON);
-		tcon |= pwm_tcon_invert(pwm);
-		__raw_writel(tcon, S3C2410_TCON);
-	}
-#endif
-
 	if (!pwm->running) {
 		clk_enable(pwm->clk);
 		clk_enable(pwm->clk_div);
@@ -187,13 +168,6 @@ void pwm_disable(struct pwm_device *pwm)
 	unsigned long tcon;
 
 	spin_lock_irqsave(&pwm_spin_lock, flags);
-
-#if defined (CONFIG_S5PC110_HAWK_BOARD) /* nat */
-	if (pwm->pwm_id==0) {
-		s3c_gpio_cfgpin(GPIO_LCD_BL_PWM, S3C_GPIO_OUTPUT);
-		gpio_set_value(GPIO_LCD_BL_PWM, 0);
-	}
-#endif	
 
 	if (pwm->running) {
 		tcon = __raw_readl(S3C2410_TCON);
@@ -311,18 +285,6 @@ int pwm_config(struct pwm_device *pwm, int duty_ns, int period_ns)
 	tcon |= pwm_tcon_autoreload(pwm);
 	__raw_writel(tcon, S3C2410_TCON);
 	
-#if defined (CONFIG_S5PC110_HAWK_BOARD) /* nat */
-	if (pwm->pwm_id==0) {
-		s3c_gpio_cfgpin(GPIO_LCD_BL_PWM,  (0x2 << 0));
-
-		/* PWM timer #0 output inverter bit in TCON for must be set.
-			After sleep out, the bit has been erased even though resume function did set.*/
-		tcon = __raw_readl(S3C2410_TCON);
-		tcon |= pwm_tcon_invert(pwm);
-		__raw_writel(tcon, S3C2410_TCON);
-	}
-#endif
-
 	tcon &= ~pwm_tcon_manulupdate(pwm);
 	__raw_writel(tcon, S3C2410_TCON);
 

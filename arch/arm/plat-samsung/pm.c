@@ -42,9 +42,6 @@
 #define S5PV210_GPIOREG(x)		(S5P_VA_GPIO + (x))
 #define S5PV210_EINT1PEND			S5PV210_GPIOREG(0xF44)	/* EINT31[0] ~  EINT31[7] */
 #define S5PV210_EINT2PEND			S5PV210_GPIOREG(0xF48)	/* EINT32[0] ~  EINT32[7] */
-#if defined (CONFIG_S5PC110_HAWK_BOARD) 
-#define EINTPEND1_BIT_ALSINT		(1 << 2)
-#endif
 #define EINTPEND1_BIT_ONEDRAM		(1 << 3)
 #define EINTPEND2_BIT_MICROUSB	(1 << 7)
 
@@ -334,15 +331,6 @@ bool s3c_pm_check_pending_interrupt(void)
 		}
 	}
 
-#if 0 // defined (CONFIG_S5PC110_HAWK_BOARD) 
-	if(s5pc11x_pm_wakeup_eint1_pend) {	
-		if(s5pc11x_pm_wakeup_eint1_pend & EINTPEND1_BIT_ALSINT) {
-			printk(KERN_DEBUG "%s: als_int interrupt pending.\n", __func__);
-			ret=false;
-		}
-	}
-#endif
-
 	return ret;
 }
 
@@ -369,17 +357,10 @@ static int s3c_pm_enter(suspend_state_t state)
 		printk(KERN_ERR "interrupt pending. wakeup!!(1)\n", __func__);	
 		return -EINVAL;
 	}
-#if ! defined (CONFIG_S5PC110_HAWK_BOARD) 	
 	/* 20110125 - control power of moviNAND at PM and add 400ms delay for stabilization of moviNAND. */
 	gpio_set_value(GPIO_MASSMEMORY_EN, 0);
-#ifdef CONFIG_S5PC110_DEMPSEY_BOARD
-	gpio_set_value(GPIO_MASSMEMORY_EN2, 0);
-#else
 	mdelay(400);
-#endif
 
-
-#endif
 	/* 20110210 - check pending interrupt to wakeup device */
 	if(!s3c_pm_check_pending_interrupt())
 	{

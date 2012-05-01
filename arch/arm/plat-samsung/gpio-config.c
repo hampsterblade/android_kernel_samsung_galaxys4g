@@ -80,7 +80,6 @@ int s3c_gpio_setpull(unsigned int pin, s3c_gpio_pull_t pull)
 }
 EXPORT_SYMBOL(s3c_gpio_setpull);
 
-//+gingerbread_CG2900
 s3c_gpio_pull_t s3c_gpio_getpin(unsigned int pin)
 {
 	struct s3c_gpio_chip *chip = s3c_gpiolib_getchip(pin);
@@ -100,11 +99,7 @@ s3c_gpio_pull_t s3c_gpio_getpin(unsigned int pin)
 
 	return ret;
 }
-
 EXPORT_SYMBOL(s3c_gpio_getpin);
-//-gingerbread_CG2900
-
-
 
 int s3c_gpio_setpin(unsigned int pin, s3c_gpio_pull_t level)
 {
@@ -124,8 +119,8 @@ int s3c_gpio_setpin(unsigned int pin, s3c_gpio_pull_t level)
 
         return ret;
 }
-
 EXPORT_SYMBOL(s3c_gpio_setpin);
+
 #ifdef CONFIG_S3C_GPIO_CFG_S3C24XX
 int s3c_gpio_setcfg_s3c24xx_a(struct s3c_gpio_chip *chip,
 			      unsigned int off, unsigned int cfg)
@@ -244,7 +239,6 @@ unsigned s3c_gpio_getcfg_s3c64xx_4bit(struct s3c_gpio_chip *chip,
 	/* this conversion works for IN and OUT as well as special mode */
 	return S3C_GPIO_SPECIAL(con);
 }
-
 #endif /* CONFIG_S3C_GPIO_CFG_S3C64XX */
 
 #ifdef CONFIG_S3C_GPIO_PULL_UPDOWN

@@ -76,7 +76,6 @@ const unsigned long arm_volt_max = 1350000;
 const unsigned long int_volt_max = 1250000;
 
 static struct s5pv210_dvs_conf dvs_conf[] = {
-#if  defined(CONFIG_S5PC110_VIBRANTPLUS_BOARD)
 	[L0] = {
 		.arm_volt   = 1325000,
 		.int_volt   = 1100000,
@@ -97,49 +96,6 @@ static struct s5pv210_dvs_conf dvs_conf[] = {
 		.arm_volt   = 1000000,
 		.int_volt   = 1000000,
 	},
-#elif defined(CONFIG_S5PC110_HAWK_BOARD)
-	[L0] = {
-		.arm_volt   = 1300000,
-		.int_volt   = 1125000,
-	},
-	[L1] = {
-		.arm_volt   = 1225000,
-		.int_volt   = 1125000,
-	},
-	[L2] = {
-		.arm_volt   = 1075000,
-		.int_volt   = 1125000,
-	},
-	[L3] = {
-		.arm_volt   = 975000,
-		.int_volt   = 1125000,
-	},
-	[L4] = {
-		.arm_volt   = 975000,
-		.int_volt   = 1025000,
-	},
-#else
-	[L0] = {
-		.arm_volt   = 1275000,
-		.int_volt   = 1100000,
-	},
-	[L1] = {
-		.arm_volt   = 1200000,
-		.int_volt   = 1100000,
-	},
-	[L2] = {
-		.arm_volt   = 1050000,
-		.int_volt   = 1100000,
-	},
-	[L3] = {
-		.arm_volt   = 950000,
-		.int_volt   = 1100000,
-	},
-	[L4] = {
-		.arm_volt   = 950000,
-		.int_volt   = 1000000,
-	},
-#endif	
 };
 
 static u32 clkdiv_val[5][11] = {

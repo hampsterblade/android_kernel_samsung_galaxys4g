@@ -29,14 +29,11 @@ obj-$(CONFIG_MACH_HERRING)	+= herring-vibrator.o
 obj-$(CONFIG_MACH_HERRING)	+= herring-btlpm.o
 obj-$(CONFIG_MACH_HERRING)	+= herring-watchdog.o
 obj-$(CONFIG_MACH_HERRING)	+= herring-panel.o
+obj-$(CONFIG_MACH_HERRING)	+= herring-touchkey-led.o
 
-#obj-$(CONFIG_MACH_HERRING)	+= dev-herring-phone.o
+obj-$(CONFIG_MACH_HERRING)	+= dev-herring-phone.o
 
-ifeq ($(CONFIG_S5PC110_DEMPSEY_BOARD), y)
-obj-$(CONFIG_MACH_ARIES)	+= mach-aries.o dempsey-rfkill.o
-else
 obj-$(CONFIG_MACH_ARIES)	+= mach-aries.o aries-rfkill.o
-endif
 #obj-$(CONFIG_MACH_ARIES)	+= aries-vibrator.o
 #obj-$(CONFIG_MACH_ARIES)	+= aries-btlpm.o
 obj-$(CONFIG_MACH_ARIES)	+= aries-watchdog.o
@@ -45,14 +42,7 @@ obj-$(CONFIG_MACH_ARIES)        += sec_switch.o
 
 obj-$(CONFIG_MACH_ARIES)	+= dev-s1-phone.o
 
-ifeq ($(CONFIG_S5PC110_DEMPSEY_BOARD), y)
-ifeq ($(CONFIG_CPU_FREQ),y)
-obj-$(CONFIG_CPU_S5PV210)		+= cpu-freq_c110b.o
-obj-$(CONFIG_CPU_S5PV210_B)		+= cpu-freq_c110b.o
-endif
-else
 obj-$(CONFIG_CPU_FREQ)		+= cpu-freq.o
-endif
 
 obj-$(CONFIG_S5PV210_SETUP_SDHCI)       += setup-sdhci.o
 
@@ -71,7 +61,5 @@ obj-$(CONFIG_S5PV210_SETUP_FIMC0)	+= setup-fimc0.o
 obj-$(CONFIG_S5PV210_SETUP_FIMC1)	+= setup-fimc1.o
 obj-$(CONFIG_S5PV210_SETUP_FIMC2)	+= setup-fimc2.o
 obj-$(CONFIG_S5PV210_SETUP_CSIS)	+= setup-csis.o
-
-obj-$(CONFIG_GPS_CHIPSET_STE_CG2900)	+= cg2900_devices.o
 
 obj-$(CONFIG_CPU_IDLE)		+= cpuidle.o didle.o
