@@ -477,6 +477,15 @@ config LOG_BUF_SHIFT
 		     13 =>  8 KB
 		     12 =>  4 KB
 
+config CONSOLE_DEFAULT_LOGLEVEL
+	bool "Override the default loglevel"
+	help
+	  Override the default loglevel. The default is 4.
+
+config CONSOLE_DEFAULT_LOGLVL
+	int "Override level"
+	depends on CONSOLE_DEFAULT_LOGLEVEL
+	default 4
 #
 # Architectures with an unreliable sched_clock() should select this:
 #

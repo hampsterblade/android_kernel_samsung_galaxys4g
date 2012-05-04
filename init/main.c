@@ -264,6 +264,11 @@ early_param("quiet", quiet_kernel);
 
 static int __init loglevel(char *str)
 {
+#ifdef CONFIG_CONSOLE_DEFAULT_LOGLEVEL
+	console_loglevel = CONFIG_CONSOLE_DEFAULT_LOGLVL;
+	pr_info("loglevel override: loglevel=%d",
+		console_loglevel);
+#endif
 	get_option(&str, &console_loglevel);
 	return 0;
 }
