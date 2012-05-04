@@ -38,7 +38,6 @@
 #include "aries.h"
 
 #define BT_SLEEP_ENABLE
-#define USE_LOCK_DVFS
 
 #define IRQ_BT_HOST_WAKE      IRQ_EINT(21)
 
@@ -59,12 +58,6 @@ static struct rfkill *bt_sleep_rfk;
 
 volatile int bt_is_running = 0;
 EXPORT_SYMBOL(bt_is_running);
-
-#ifdef USE_LOCK_DVFS
-static struct rfkill *bt_lock_dvfs_rfk;
-static struct rfkill *bt_lock_dvfs_l2_rfk;
-#include <mach/cpu-freq-v210.h>
-#endif
 
 void bt_uart_rts_ctrl(int flag)
 {
@@ -267,65 +260,6 @@ static const struct rfkill_ops btsleep_rfkill_ops = {
 };
 #endif
 
-#ifdef USE_LOCK_DVFS
-static int bluetooth_lock_dvfs(void *data, enum rfkill_user_states state)
-{
-	if(!gpio_get_value(GPIO_BT_nRST))
-		return 0;
-	
-	switch (state) {
-		case RFKILL_USER_STATE_UNBLOCKED:
-			s5pv210_unlock_dvfs_high_level(DVFS_LOCK_TOKEN_9);
-			pr_debug("[BT] dvfs unlock\n");
-			break;
-		case RFKILL_USER_STATE_SOFT_BLOCKED:
-			s5pv210_lock_dvfs_high_level(DVFS_LOCK_TOKEN_9, L3);
-			pr_debug("[BT] dvfs lock to L3\n");
-			break;
-		case RFKILL_USER_STATE_HARD_BLOCKED:
-			s5pv210_lock_dvfs_high_level(DVFS_LOCK_TOKEN_9, L2);
-			pr_debug("[BT] dvfs lock to L2\n");
-			break;			
-		default:
-			pr_err("[BT] bad bluetooth rfkill state %d\n", state);
-	}
-	return 0;
-}
-
-static int bt_lock_dvfs_rfkill_set_block(void *data, bool blocked)
-{
-	int ret =0;
-	
-	ret = bluetooth_lock_dvfs(data, blocked?
-			RFKILL_USER_STATE_SOFT_BLOCKED :
-			RFKILL_USER_STATE_UNBLOCKED);
-		
-	return ret;
-}
-
-static int bt_lock_dvfs_l2_rfkill_set_block(void *data, bool blocked)
-{
-	int ret =0;
-	
-	ret = bluetooth_lock_dvfs(data, blocked?
-			RFKILL_USER_STATE_HARD_BLOCKED :
-			RFKILL_USER_STATE_UNBLOCKED);
-		
-	return ret;
-}
-
-
-static const struct rfkill_ops bt_lock_dvfs_rfkill_ops = {
-	.set_block = bt_lock_dvfs_rfkill_set_block,
-};
-
-
-static const struct rfkill_ops bt_lock_dvfs_l2_rfkill_ops = {
-	.set_block = bt_lock_dvfs_l2_rfkill_set_block,
-};
-#endif
-
-
 static int __init aries_rfkill_probe(struct platform_device *pdev)
 {
 	int irq;
@@ -412,57 +346,7 @@ static int __init aries_rfkill_probe(struct platform_device *pdev)
 		goto err_sleep_register;
 	}
 #endif
-
-#ifdef USE_LOCK_DVFS
-	bt_lock_dvfs_rfk = rfkill_alloc(bt_name, &pdev->dev, RFKILL_TYPE_BLUETOOTH,
-			&bt_lock_dvfs_rfkill_ops, NULL);
-
-	if (!bt_lock_dvfs_rfk) {
-		pr_err("[BT] bt_lock_dvfs_rfk : rfkill_alloc is failed\n");
-		ret = -ENOMEM;
-		goto err_dvfs_lock_alloc;
-	}
-
-	pr_debug("[BT] rfkill_register(bt_lock_dvfs_rfk)\n");
-
-	ret = rfkill_register(bt_lock_dvfs_rfk);
-	if (ret) {
-		pr_err("********ERROR IN REGISTERING THE bt_lock_dvfs_rfk********\n");
-		goto err_lock_dvfs_register;
-	}
-
-	bt_lock_dvfs_l2_rfk = rfkill_alloc(bt_name, &pdev->dev, RFKILL_TYPE_BLUETOOTH,
-			&bt_lock_dvfs_l2_rfkill_ops, NULL);
-
-	if (!bt_lock_dvfs_l2_rfk) {
-		pr_err("[BT] bt_lock_dvfs_l2_rfk : rfkill_alloc is failed\n");
-		ret = -ENOMEM;
-		goto err_dvfs_l2_lock_alloc;
-	}
-
-	pr_debug("[BT] rfkill_register(bt_lock_dvfs_l2_rfk)\n");
-
-	ret = rfkill_register(bt_lock_dvfs_l2_rfk);
-	if (ret) {
-		pr_err("********ERROR IN REGISTERING THE bt_lock_dvfs_l2_rfk********\n");
-		goto err_lock_dvfs_l2_register;
-	}	
-#endif
 	return ret;
-
-#ifdef USE_LOCK_DVFS
-err_lock_dvfs_l2_register:
-	rfkill_destroy(bt_lock_dvfs_l2_rfk);
-
-err_dvfs_l2_lock_alloc:
-	rfkill_unregister(bt_lock_dvfs_rfk);
-	
-err_lock_dvfs_register:
-	rfkill_destroy(bt_lock_dvfs_rfk);
-
-err_dvfs_lock_alloc:
-	rfkill_unregister(bt_sleep_rfk);
-#endif
 
 #ifdef BT_SLEEP_ENABLE
 err_sleep_register:
