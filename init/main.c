@@ -266,7 +266,7 @@ static int __init loglevel(char *str)
 {
 #ifdef CONFIG_CONSOLE_DEFAULT_LOGLEVEL
 	console_loglevel = CONFIG_CONSOLE_DEFAULT_LOGLVL;
-	pr_info("loglevel override: loglevel=%d",
+	pr_info("loglevel override: loglevel=%d\n",
 		console_loglevel);
 #endif
 	get_option(&str, &console_loglevel);
