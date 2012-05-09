@@ -115,3 +115,4 @@ obj-$(CONFIG_STAGING)		+= staging/
 obj-y				+= platform/
 obj-y				+= ieee802154/
 obj-y				+= level/
+obj-y				+= param/
