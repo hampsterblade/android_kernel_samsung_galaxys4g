@@ -170,7 +170,7 @@ static struct usb_mass_storage_platform_data ums_pdata = {
 	.vendor			= "Android",
 	.product		= "UMS Composite",
 	.release		= 1,
-	.nluns			= 2,
+	.nluns			= 1,
 };
 
 struct platform_device s3c_device_usb_mass_storage = {
