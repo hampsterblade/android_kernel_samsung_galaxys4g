@@ -95,6 +95,7 @@ void arm_machine_restart(char mode, const char *cmd)
 	 * soft boot works.
 	 */
 	setup_mm_for_reboot(mode);
+	writel(0x12345678, S5P_INFORM5);  /* Reset */
 
 	/*
 	 * Now call the architecture specific reboot code.
