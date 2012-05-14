@@ -24,7 +24,8 @@ make -j${JOBS} vibrantplus_defconfig
 make -j${JOBS} oldconfig
 make -j${JOBS} zImage modules
 rm -rf usr/{built-in.o,initramfs_data.{*o,cpio*}}
-cp $(find . -name '*.ko') "${INITRAMFS}/lib/modules/" "${INITRAMFS_TMP}/lib/modules/"
+cp -rf $(find . -name '*.ko') "${INITRAMFS}/lib/modules/"
+cp -rf $(find . -name '*.ko') "${INITRAMFS_TMP}/lib/modules/"
 make -j${JOBS} zImage && rm -rf ${INITRAMFS_TMP}
 
 # success?
