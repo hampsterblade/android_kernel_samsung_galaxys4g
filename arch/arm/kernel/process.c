@@ -28,6 +28,7 @@
 #include <linux/tick.h>
 #include <linux/utsname.h>
 #include <linux/uaccess.h>
+#include <mach/regs-clock.h>
 
 #include <asm/leds.h>
 #include <asm/processor.h>
