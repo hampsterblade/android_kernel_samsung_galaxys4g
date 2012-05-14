@@ -28,7 +28,7 @@ cp $(find . -name '*.ko') "${INITRAMFS}/lib/modules/" "${INITRAMFS_TMP}/lib/modu
 make -j${JOBS} zImage && rm -rf ${INITRAMFS_TMP}
 
 # success?
-if [ -d "${INITRAMFS_TMP}" ]
+if [ ! -d "${INITRAMFS_TMP}" ]; then
     echo "Build successful"
     exit 0
 else
